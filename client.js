@@ -24,20 +24,29 @@ if (!remote_url) {
     process.exit(1);
 }
 
+console.log("will connect to " + remote_url);
+console.log("local port is " + local_port);
 if (proxy) {
-    console.log("will connect to " + remote_url + " via " + proxy);
+    console.log("proxy via " + proxy);
     //TODO
 }
 
 net.createServer(sock => {
+    console.log("new connection");
     var options ={};
 
     sock.pause();
     var ws = new WebSocket(remote_url, options);
-    ws.on('open', () => sock.resume());
+    ws.on('open', () => {
+        console.log("remote peer connected" );
+        sock.resume()
+    });
     ws.on('close', () => sock.end());
     ws.on('message', data => sock.write(data));
-    ws.on('error', () => sock.destroy());
+    ws.on('error', err => {
+        console.error(err);
+        sock.destroy()
+    });
     sock.on('data', data => ws.send(data));
     sock.on('end', () => ws.close());
     sock.on('error', console.error);
