@@ -33,19 +33,19 @@ if (proxy) {
 
 net.createServer(sock => {
     console.log("new connection");
-    var options ={};
+    var options = {};
 
     sock.pause();
     var ws = new WebSocket(remote_url, options);
     ws.on('open', () => {
-        console.log("remote peer connected" );
-        sock.resume()
+        console.log("remote peer connected");
+        sock.resume();
     });
     ws.on('close', () => sock.end());
     ws.on('message', data => sock.write(data));
     ws.on('error', err => {
         console.error(err);
-        sock.destroy()
+        sock.destroy();
     });
     sock.on('data', data => ws.send(data));
     sock.on('end', () => ws.close());

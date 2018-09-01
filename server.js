@@ -8,6 +8,7 @@ The above copyright notice and this permission notice shall be included in all c
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
+var assert = require('assert');
 var net = require('net');
 var http = require('http');
 var url = require('url');
@@ -23,28 +24,37 @@ server.on('connection', ws => {
     console.log("session arrived");
     var sock = net.connect(to_port, to_host, () => {
         console.log("session connected");
-        sock.emit('drain');
+        drain();
     });
     var pending = [];
     var busy = true;
     ws.on('message', data => {
+        console.log('in data');
         if (busy) {
             pending.push(data);
         } else {
-            busy = sock.write(data);
+            assert(pending.length === 0);
+            console.log('up data');
+            busy = !sock.write(data);
         }
     });
-    sock.on('drain', () => {
+    sock.on('drain', drain);
+
+    function drain() {
+        console.log('drain');
         busy = false;
         while (pending.length > 0) {
             var data = pending.shift();
             busy = sock.write(data);
             if (busy) return;
         }
-    });
+    }
     sock.on('error', e => {
         console.log("session error");
     });
-    sock.on('data', data => ws.send(data));
+    sock.on('data', data => {
+        console.log('dn data');
+        ws.send(data)
+    });
     sock.on('end', () => ws.close());
 });
