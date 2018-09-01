@@ -1,0 +1,28 @@
+{
+    "name": "wstunnel",
+    "version": "0.1.0",
+    "description": "tcp tunnel via ws",
+    "homepage": "http://github.com/rdrdprgrmr/wstunnel",
+    "author": "<rtrdprgrmr@yahoo.co.jp>",
+    "license": "MIT",
+    "keywords": [
+        "Node.js",
+        "tunnel"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/rtrdprgrmr/wstunnel.git"
+    },
+    "bugs": {
+        "url": "https://github.com/rtrdprgrmr/wstunnel/issues"
+    },
+    "engines": {
+        "node": ">= 6.0.0"
+    },
+    "main": "server.js",
+    "dependencies": {
+        "ws": "^6.0.0"
+    },
+    "devDependencies": {},
+    "directories": {}
+}
