@@ -8,26 +8,29 @@ The above copyright notice and this permission notice shall be included in all c
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-var net = require('net')
-var http = require('http')
-var url = require('url')
+var net = require('net');
+var http = require('http');
+var url = require('url');
+var WebSocket = require('ws');
+var HttpProxyAgent = require('http-proxy-agent');
 
-var remote_url = process.argv[2]
-var local_port = process.argv[3] || '8881'
-var proxy = process.env.http_proxy
+var remote_url = process.argv[2];
+var local_port = process.argv[3] || '8881';
+var proxy = process.env.http_proxy;
 
 if (!remote_url) {
-    console.log("usage:\texport http_proxy=http://proxy-ip:proxy-port")
-    console.log("\tnode client ws://remote-ip:remote-port [local_port]")
-    process.exit(1)
+    console.log("usage:\texport http_proxy=http://proxy-ip:proxy-port");
+    console.log("\tnode client ws://remote-ip:remote-port [local_port]");
+    process.exit(1);
 }
 
 if (proxy) {
-    console.log("will connect to " + remote_url + " via " + proxy)
+    console.log("will connect to " + remote_url + " via " + proxy);
     //TODO
 }
 
 net.createServer(sock => {
+    var options ={};
 
     sock.pause();
     var ws = new WebSocket(remote_url, options);
@@ -39,4 +42,4 @@ net.createServer(sock => {
     sock.on('end', () => ws.close());
     sock.on('error', console.error);
 
-}).listen(local_port)
+}).listen(local_port);

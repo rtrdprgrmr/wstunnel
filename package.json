@@ -21,7 +21,8 @@
     },
     "main": "server.js",
     "dependencies": {
-        "ws": "^6.0.0"
+        "ws": "^6.0.0",
+        "http-proxy-agent": "^2.1.0"
     },
     "devDependencies": {},
     "directories": {}
