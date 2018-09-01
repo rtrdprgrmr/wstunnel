@@ -17,9 +17,7 @@ var port = process.env.OPENSHIFT_NODEJS_PORT || process.env.PORT || 8001;
 var to_host = process.argv[2] || '127.0.0.1';
 var to_port = +process.argv[3] || 22;
 
-var server = new WebSocket.Server({
-    port: 8080
-});
+var server = new WebSocket.Server({ port });
 
 server.on('connection', ws => {
     console.log("session arrived");
