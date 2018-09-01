@@ -29,19 +29,19 @@ server.on('connection', ws => {
     var pending = [];
     var busy = true;
     ws.on('message', data => {
-        console.log('in data');
+        //console.log('in data');
         if (busy) {
             pending.push(data);
         } else {
             assert(pending.length === 0);
-            console.log('up data');
+            //console.log('up data');
             busy = !sock.write(data);
         }
     });
     sock.on('drain', drain);
 
     function drain() {
-        console.log('drain');
+        //console.log('drain');
         busy = false;
         while (pending.length > 0) {
             var data = pending.shift();
@@ -50,10 +50,10 @@ server.on('connection', ws => {
         }
     }
     sock.on('error', e => {
-        console.log("session error");
+        console.log(e);
     });
     sock.on('data', data => {
-        console.log('dn data');
+        //console.log('dn data');
         ws.send(data)
     });
     sock.on('end', () => ws.close());
