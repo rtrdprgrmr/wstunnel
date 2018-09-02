@@ -12,7 +12,7 @@ var net = require('net');
 var http = require('http');
 var url = require('url');
 var WebSocket = require('ws');
-var HttpProxyAgent = require('http-proxy-agent');
+var HttpProxyAgent = require('https-proxy-agent');
 
 var remote_url = process.argv[2];
 var local_port = process.argv[3] || '8881';
@@ -26,17 +26,17 @@ if (!remote_url) {
 
 console.log("will connect to " + remote_url);
 console.log("local port is " + local_port);
+var opts = {};
 if (proxy) {
     console.log("proxy via " + proxy);
-    //TODO
+    opts.agent = new HttpProxyAgent(proxy);
 }
 
 net.createServer(sock => {
     console.log("new connection");
-    var options = {};
 
     sock.pause();
-    var ws = new WebSocket(remote_url, options);
+    var ws = new WebSocket(remote_url, opts);
     ws.on('open', () => {
         console.log("remote peer connected");
         sock.resume();
